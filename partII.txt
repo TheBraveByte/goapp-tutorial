@@ -1,0 +1,87 @@
+Handlers for user requests
+To process every api requests make by the user to each endpoint, we need to compute the logic that will carry out the user request successfully. And for us to accompanied that ,we will create methods to help process each request.
+
+To meet up with what we need. We will set up a repository pattern in the handlers package which is similar to how we put together our database queries methods in the query package.
+
+Let's go straight to setting a proper structure in creating our handlers
+
+
+```go
+package handlers
+
+import (
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+	"github.com/yusuf/go-app/modules/config"
+	"github.com/yusuf/go-app/modules/database"
+	"github.com/yusuf/go-app/modules/database/query"
+	"go.mongodb.org/mongo-driver/mongo"
+)
+
+type GoApp struct {
+	App *config.GoAppTools
+	DB  database.DBRepo
+}
+
+func NewGoApp(app *config.GoAppTools, db *mongo.Client) *GoApp {
+	return &GoApp{
+		App: app,
+		DB:  query.NewGoAppDB(app, db),
+	}
+}
+
+func (ga *GoApp) Home () gin.HandlerFunc{
+	return func (ctx *gin.Context){
+		fmt.Sprintln("Creating a scalable web application with Gin")
+	}
+}
+```
+
+We created a GoApp struct with field App of type config.GoAppTools which is a struct type that we added in the config package and a field DB of type database.DBRepo which is an interface that implements any type defined but here the database.DBRepo implements all the database query methods that will be use in each of the computed handlers' logic.
+
+Now let's define a function of NewGoApp that takes in app of a pointer to the type config.GoAppTools and db of pointer to type mongo.Client as parameters then returns a type of pointer to the GoApp struct. This function defined will come in handy when called in the main package(main.go) and the value of its parameters will be passed.
+
+All that done properly, we created a handler method using the GoApp struct that was added earlier to handle the user request to the application homepage, this handler return a type of gin.HandlerFunc. In the method, our return value is an anonymous function with a parameter of pointer to gin.Context. Gin context is the most important part of gin. It allows us to pass variables between middleware, manage the flow, validate the JSON of a request with the appropriate HTTP status code (200)and render a JSON response.
+
+
+With the new approach toward building a stable, scalable and easy to maintain application , we need to modify our previous code in main.go
+
+```go
+// connecting to the database
+	client := driver.Connection(uri)
+	defer func() {
+		if err = client.Disconnect(context.TODO()); err != nil {
+			app.ErrorLogger.Fatal(err)
+			return
+		}
+	}()
+    appRouter := gin.New()
+    appRouter.GET("/", func(ctx *gin.Context) {
+        app.InfoLogger.Println("Creating a scalable web application with Gin")
+})
+```
+to this
+
+```go
+
+	// connecting to the database
+	client := driver.Connection(uri)
+	defer func() {
+		if err = client.Disconnect(context.TODO()); err != nil {
+			app.ErrorLogger.Fatal(err)
+			return
+		}
+	}()
+    appRouter := gin.New()
+
+    goApp := handlers.NewGoApp(&app, client)
+    Routes(appRouter, goApp)
+
+```
+Now, what as really changed in our current code compare to the previous code?
+After the Gin Router was initialised, we called on the NewGoApp function defined in the handlers package and pass the value of it parameters i.e (app struct and MongoDB client) whose value is a pointer to the struct created in the package. Since the struct was used to implement methods, this allows us to have access to all the methods that implements the struct type from the value returned from the function.
+
+Routes for Endpoints
+
+To map up each route's endpoints to their respective handlers which handle the user requests and also to add default security protocols to secure every request made by the user
