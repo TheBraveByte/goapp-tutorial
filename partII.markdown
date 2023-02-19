@@ -1,4 +1,4 @@
-Handlers for user requests
+### Handlers for user requests
 To process every api requests make by the user to each endpoint, we need to compute the logic that will carry out the user request successfully. And for us to accompanied that ,we will create methods to help process each request.
 
 To meet up with what we need. We will set up a repository pattern in the handlers package which is similar to how we put together our database queries methods in the query package.
@@ -80,8 +80,43 @@ to this
 
 ```
 Now, what as really changed in our current code compare to the previous code?
-After the Gin Router was initialised, we called on the NewGoApp function defined in the handlers package and pass the value of it parameters i.e (app struct and MongoDB client) whose value is a pointer to the struct created in the package. Since the struct was used to implement methods, this allows us to have access to all the methods that implements the struct type from the value returned from the function.
+After the Gin instance was created, we called on the NewGoApp function defined in the handlers package and pass the value of it parameters i.e (app struct and MongoDB client) whose value is a pointer to the struct created in the package. Since the struct was used to implement methods, this allows us to have access to all the methods that implements the struct type from the value returned from the function.
 
 Routes for Endpoints
 
-To map up each route's endpoints to their respective handlers which handle the user requests and also to add default security protocols to secure every request made by the user
+To map up each route's endpoints to their respective handlers which handle the user requests and also to add default security protocols to secure every request made by the user.
+
+To get this done , We will define a function called Routes which takes in two parameter r of type pointer to gin.Engine, the Gin Engine is the Gin framework's instance, it contains the muxer, default middleware and configuration settings, and we've created an instance of Engine, by using New() in main.go and g of type pointer to the GoApp function that was previously define in the handlers package.
+In addition to that , we will need to add some user data in session as cookies for easy usability among handlers methods and to do that we will need to install a gin session package tool. let's install that as shown below.
+
+```go
+
+  go get github.com/gin-contrib/sessions
+  go get github.com/gin-contrib/sessions/cookie
+
+```
+
+That done, let go ahead and add up some code to set up the Routes function as mentioned.
+
+```go
+package main
+
+import (
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-gonic/gin"
+	"github.com/yusuf/go-app/handlers"
+)
+
+func Routes(r *gin.Engine, g *handlers.GoApp) {
+	router := r.Use(gin.Logger(), gin.Recovery())
+
+	router.GET("/", g.Home())
+
+	// set up for storing details as cookies
+	cookieData := cookie.NewStore([]byte("go-app"))
+	router.Use(sessions.Sessions("session", cookieData))
+}
+```
+From the implemented code, We make use of the Use method (an instance of Gin instance) attaches a global middleware to the router. i.e. the middleware attached through Use() will be included in the handlers chain for every single request. The middleware use are the Gin Logger instance to write out logs and the Recovery function that help recovers from any panics if there was one while the server is running.
+Next we added the HTTP GET request for the Homepage endpoints for the API and went further to set up the cookies store that will be use in session and have it added to the Use method as well.

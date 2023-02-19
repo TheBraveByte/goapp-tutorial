@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/yusuf/go-app/driver"
 	"github.com/yusuf/go-app/handlers"
@@ -13,6 +14,7 @@ import (
 )
 
 var app config.GoAppTools
+var validate *validator.Validate
 
 func main() {
 	InfoLogger := log.New(os.Stdout, " ", log.LstdFlags|log.Lshortfile)
@@ -20,6 +22,7 @@ func main() {
 
 	app.InfoLogger = InfoLogger
 	app.ErrorLogger = ErrorLogger
+	app.Validate = validate
 
 	err := godotenv.Load()
 	if err != nil {
