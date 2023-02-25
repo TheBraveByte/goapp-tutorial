@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/gob"
 	"log"
 	"os"
 
@@ -11,15 +12,20 @@ import (
 	"github.com/yusuf/go-app/driver"
 	"github.com/yusuf/go-app/handlers"
 	"github.com/yusuf/go-app/modules/config"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var app config.GoAppTools
 var validate *validator.Validate
 
 func main() {
+	gob.Register(map[string]interface{}{})
+	gob.Register(primitive.NewObjectID())
+	
 	InfoLogger := log.New(os.Stdout, " ", log.LstdFlags|log.Lshortfile)
 	ErrorLogger := log.New(os.Stdout, " ", log.LstdFlags|log.Lshortfile)
 
+	validate = validator.New()
 	app.InfoLogger = InfoLogger
 	app.ErrorLogger = ErrorLogger
 	app.Validate = validate
