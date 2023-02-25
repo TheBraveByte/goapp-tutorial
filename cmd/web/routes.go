@@ -17,5 +17,10 @@ func Routes(r *gin.Engine, g *handlers.GoApp) {
 	router.Use(sessions.Sessions("session", cookieData))
 
 	router.POST("/sign-up", g.SignUp())
-	return
+	router.POST("/sign-in", g.SignIn())
+
+	authRouter := r.Group("/auth", Authorization())
+	{
+		authRouter.GET("/dashboard")
+	}
 }
