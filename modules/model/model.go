@@ -13,6 +13,8 @@ type User struct {
 	Age        int                `json:"age"`
 	Password   string             `json:"password" Usage:"required,alphanumeric"`
 	Occupation string             `json:"occupation"`
+	Token      string             `json:"token"`
+	Newtoken   string             `json:"new_token"`
 	CreatedAt  time.Time          `json:"created_at"`
 	UpdatedAt  time.Time          `json:"updated_at"`
 }
