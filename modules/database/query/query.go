@@ -54,3 +54,36 @@ func (g *GoAppDB) InsertUser(user *model.User) (bool, int, error) {
 	}
 	return true, 2, nil
 }
+
+func (g *GoAppDB) VerifyUser(email string) (primitive.M, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+
+	var res bson.M
+
+	filter := bson.D{{Key: "email", Value: email}}
+	err := User(g.DB, "user").FindOne(ctx, filter).Decode(&res)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			g.App.ErrorLogger.Println("no document found for this query")
+			return nil, err
+		}
+		g.App.ErrorLogger.Fatalf("cannot execute the database query perfectly : %v ", err)
+	}
+
+	return res, nil
+}
+
+func (g *GoAppDB) UpdateInfo(userID primitive.ObjectID, tk map[string]string) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+
+	filter := bson.D{{Key: "_id", Value: userID}}
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "token", Value: tk["t1"]}, {Key: "new_token", Value: tk["t2"]}}}}
+
+	_, err := User(g.DB, "user").UpdateOne(ctx, filter, update)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
