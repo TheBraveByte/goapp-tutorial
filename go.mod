@@ -1,4 +1,4 @@
-module github.com/yusuf/go-app
+module github.com/akinbyte/go-app
 
 go 1.19
 

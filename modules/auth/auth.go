@@ -2,7 +2,7 @@ package auth
 
 import (
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/yusuf/go-app/modules/config"
+	"github.com/akinbyte/go-app/modules/config"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"os"

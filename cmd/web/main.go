@@ -9,9 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
-	"github.com/yusuf/go-app/driver"
-	"github.com/yusuf/go-app/handlers"
-	"github.com/yusuf/go-app/modules/config"
+	"github.com/akinbyte/go-app/driver"
+	"github.com/akinbyte/go-app/handlers"
+	"github.com/akinbyte/go-app/modules/config"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

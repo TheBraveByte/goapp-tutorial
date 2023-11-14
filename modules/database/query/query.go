@@ -3,9 +3,9 @@ package query
 import (
 	"context"
 	"errors"
-	"github.com/yusuf/go-app/modules/config"
-	"github.com/yusuf/go-app/modules/database"
-	"github.com/yusuf/go-app/modules/model"
+	"github.com/akinbyte/go-app/modules/config"
+	"github.com/akinbyte/go-app/modules/database"
+	"github.com/akinbyte/go-app/modules/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

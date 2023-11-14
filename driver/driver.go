@@ -2,7 +2,7 @@ package driver
 
 import (
 	"context"
-	"github.com/yusuf/go-app/modules/config"
+	"github.com/akinbyte/go-app/modules/config"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"

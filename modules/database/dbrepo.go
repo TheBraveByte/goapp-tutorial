@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/yusuf/go-app/modules/model"
+	"github.com/akinbyte/go-app/modules/model"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

@@ -4,7 +4,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"github.com/yusuf/go-app/handlers"
+	"github.com/akinbyte/go-app/handlers"
 )
 
 func Routes(r *gin.Engine, g *handlers.GoApp) {

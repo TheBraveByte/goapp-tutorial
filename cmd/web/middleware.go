@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/yusuf/go-app/modules/auth"
+	"github.com/akinbyte/go-app/modules/auth"
 	"net/http"
 )
 
